@@ -9,13 +9,14 @@ RUN apt-get update \
 
 ENV NODE_ENV=production
 
-ADD dist                /app/dist
-ADD node_modules        /app/node_modules
-ADD LICENCE             /app/LICENCE
-ADD package.json        /app/package.json
-ADD src/backend         /app/src/backend
-
+RUN npm i -g yarn
 WORKDIR /app
+ADD package.json .
+ADD yarn.lock .
+RUN yarn install --production=false
+ADD . .
+RUN yarn build
+
 
 CMD node --max_old_space_size=250 --abort_on_uncaught_exception src/backend/index.js
 
